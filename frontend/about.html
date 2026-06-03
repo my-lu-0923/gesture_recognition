@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - 手语交互系统</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/about.css">
+</head>
+<body class="about-page">
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">🤟</div>
+            <h2>手语交互系统</h2>
+            <p>AI智能版 v1.0</p>
+        </div>
+
+        <div class="user-info">
+            <div class="avatar" id="avatar">用</div>
+            <div class="user-details">
+                <div class="user-name" id="username">加载中...</div>
+                <div class="user-email" id="userEmail">加载中...</div>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="dashboard.html">
+                        <span class="icon">🏠</span>
+                        <span>手语实时翻译</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="voice-translation.html">
+                        <span class="icon">🎤</span>
+                        <span>手语演示生成</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="upload-recognition.html">
+                        <span class="icon">⬆️</span>
+                        <span>图片视频识别</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="ai-assistant.html">
+                        <span class="icon">🤖</span>
+                        <span>AI 助手</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="history.html">
+                        <span class="icon">📊</span>
+                        <span>识别历史</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="learning-stats.html">
+                        <span class="icon">📈</span>
+                        <span>学习统计</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="gesture-library.html">
+                        <span class="icon">📚</span>
+                        <span>手势库</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html">
+                        <span class="icon">👤</span>
+                        <span>个人中心</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="about.html">
+                        <span class="icon">ℹ️</span>
+                        <span>关于我们</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+            <a href="#" id="logoutBtn" class="logout-btn">
+                <span class="icon">🚪</span>
+                <span>退出登录</span>
+            </a>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="about-header">
+            <h1>🤟 手语交互系统</h1>
+            <p>基于多模态感知与大语言模型的智能手语翻译系统</p>
+            <div class="version">版本 1.0.0 · 2026</div>
+        </div>
+
+        <div class="about-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI智能识别</h3>
+                <p>基于YOLOv8的实时手语识别，支持35种常用手势，准确率高达98%</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💬</div>
+                <h3>智能对话</h3>
+                <p>集成大语言模型，能够理解手势含义并进行自然对话</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>学习分析</h3>
+                <p>记录学习进度，提供个性化学习建议和统计报告</p>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 style="text-align: center; margin-bottom: 30px;">项目统计</h2>
+            <div class="stats-grid">
+                <div><div class="stat-number">35</div><div class="stat-desc">手势类别</div></div>
+                <div><div class="stat-number">98.5%</div><div class="stat-desc">识别准确率</div></div>
+                <div><div class="stat-number">15ms</div><div class="stat-desc">推理延迟</div></div>
+                <div><div class="stat-number">10k+</div><div class="stat-desc">训练样本</div></div>
+            </div>
+        </div>
+
+        <div class="stats-section">
+            <h2 style="text-align: center; margin-bottom: 30px;">技术架构</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+                <span class="badge success" style="padding: 10px 20px;">YOLOv8</span>
+                <span class="badge success" style="padding: 10px 20px;">PyTorch</span>
+                <span class="badge success" style="padding: 10px 20px;">Spring Boot</span>
+                <span class="badge success" style="padding: 10px 20px;">OpenCV</span>
+                <span class="badge success" style="padding: 10px 20px;">LLM</span>
+            </div>
+        </div>
+
+        <div class="team-section">
+            <h2 style="text-align: center; margin-bottom: 30px;">开发团队</h2>
+            <div class="team-grid">
+                <div class="team-member"><div class="member-avatar">王</div><div class="member-name">王琳雅</div><div class="member-role">项目负责人</div></div>
+                <div class="team-member"><div class="member-avatar">林</div><div class="member-name">林剑</div><div class="member-role">指导老师</div></div>
+            </div>
+        </div>
+
+        <div class="contact-section">
+            <h2 style="text-align: center; margin-bottom: 20px;">联系我们</h2>
+            <div class="contact-info">
+                <div class="contact-item"><div class="contact-icon">📧</div><div>support@signai.com</div></div>
+                <div class="contact-item"><div class="contact-icon">📱</div><div>+86 123-4567-8900</div></div>
+                <div class="contact-item"><div class="contact-icon">📍</div><div>浙江财经大学</div></div>
+            </div>
+        </div>
+    </main>
+
+</div>
+
+<script src="js/auth.js"></script>
+<script>
+    // 检查登录状态
+    async function checkLogin() {
+        try {
+            console.log('检查登录状态...');
+            // 使用 auth 对象检查登录
+            const isLoggedIn = await auth.checkAuth();
+            console.log('登录状态:', isLoggedIn);
+
+            if (!isLoggedIn) {
+                console.log('未登录，跳转到登录页');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            // 显示用户名
+            const user = auth.getUser();
+            if (user) {
+                document.getElementById('username').textContent = user.name;
+                document.getElementById('avatar').textContent = user.avatar;
+                document.getElementById('userEmail').textContent = user.email || user.name;
+                console.log('用户信息已更新:', user);
+            }
+        } catch(err) {
+            console.error('检查登录失败:', err);
+            window.location.href = 'login.html';
+        }
+    }
+
+    // 退出登录
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            console.log('退出登录');
+            await auth.logout();
+        });
+    }
+
+    // 页面加载时检查
+    checkLogin();
+</script>
+</body>
+</html>

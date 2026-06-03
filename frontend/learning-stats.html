@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习统计</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/learning-stats.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">🤟</div>
+                <h2>手语交互系统</h2>
+                <p>AI智能版 v1.0</p>
+            </div>
+            <div class="user-info">
+                <div class="avatar" id="avatar">用</div>
+                <div class="user-details">
+                    <div class="user-name" id="username">加载中...</div>
+                    <div class="user-email" id="userEmail">加载中...</div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <span class="icon">🏠</span>
+                            <span>手语实时翻译</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="voice-translation.html">
+                            <span class="icon">🎤</span>
+                            <span>手语演示生成</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="upload-recognition.html">
+                            <span class="icon">⬆️</span>
+                            <span>图片视频识别</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-assistant.html">
+                            <span class="icon">🤖</span>
+                            <span>AI 助手</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="history.html">
+                            <span class="icon">📊</span>
+                            <span>识别历史</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="learning-stats.html">
+                            <span class="icon">📈</span>
+                            <span>学习统计</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="gesture-library.html">
+                            <span class="icon">📚</span>
+                            <span>手势库</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html">
+                            <span class="icon">👤</span>
+                            <span>个人中心</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="about.html">
+                            <span class="icon">ℹ️</span>
+                            <span>关于我们</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="#" id="logoutBtn" class="logout-btn">
+                    <span class="icon">🚪</span>
+                    <span>退出登录</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="top-nav">
+                <div class="page-title">
+                    <h1>学习统计</h1>
+                    <p>追踪你的手语学习进度，查看掌握情况和趋势分析</p>
+                    <p>后端接口：/api/learning/stats</p>
+                </div>
+            </div>
+
+            <!-- 统计卡片概览 -->
+            <div class="stats-overview">
+                <div class="stat-card-large">
+                    <div class="stat-icon-large">🎯</div>
+                    <div class="stat-number-large" id="totalRecognitions">0</div>
+                    <div class="stat-label-large">总识别次数</div>
+                    <div class="stat-trend" id="totalTrend">+0% 本周</div>
+                </div>
+                <div class="stat-card-large">
+                    <div class="stat-icon-large">✅</div>
+                    <div class="stat-number-large" id="masteredCount">0</div>
+                    <div class="stat-label-large">已掌握手势</div>
+                    <div class="stat-trend" id="masteredTrend">+0 本周</div>
+                </div>
+                <div class="stat-card-large">
+                    <div class="stat-icon-large">🔄</div>
+                    <div class="stat-number-large" id="learningCount">0</div>
+                    <div class="stat-label-large">学习中手势</div>
+                    <div class="stat-trend" id="learningTrend">需加强</div>
+                </div>
+                <div class="stat-card-large">
+                    <div class="stat-icon-large">⭐</div>
+                    <div class="stat-number-large" id="avgAccuracy">0%</div>
+                    <div class="stat-label-large">平均准确率</div>
+                    <div class="stat-trend" id="accuracyTrend">+0%</div>
+                </div>
+            </div>
+
+            <!-- 整体进度 -->
+            <div class="progress-section">
+                <div class="progress-header">
+                    <h3>📊 学习进度</h3>
+                    <span id="progressPercent">0%</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-fill" id="overallProgress"></div>
+                </div>
+                <div class="progress-stats">
+                    <span>已掌握: <strong id="masteredCount2">0</strong> 个</span>
+                    <span>学习中: <strong id="learningCount2">0</strong> 个</span>
+                    <span>未开始: <strong id="notStartedCount">35</strong> 个</span>
+                </div>
+            </div>
+
+            <!-- 趋势图表 -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <h3>📅 识别趋势</h3>
+                    <div class="time-range">
+                        <button class="range-btn active" data-range="week">本周</button>
+                        <button class="range-btn" data-range="month">本月</button>
+                        <button class="range-btn" data-range="all">全部</button>
+                    </div>
+                </div>
+                <canvas id="trendChart"></canvas>
+            </div>
+
+            <!-- 手势掌握度详情 -->
+            <div class="card">
+                <div class="card-header" style="margin-bottom: 15px;">
+                    <h3>🎴 手势掌握度详情</h3>
+                    <span style="font-size: 12px; color: var(--gray-color);">点击手势可查看详情</span>
+                </div>
+                <div id="gestureGrid" class="gesture-grid">
+                    <div class="empty-state">加载中...</div>
+                </div>
+            </div>
+
+            <!-- 学习建议 -->
+            <div class="tips-section">
+                <div class="tips-title">
+                    <span>💡</span>
+                    <span>学习建议</span>
+                </div>
+                <ul class="tips-list" id="tipsList">
+                    <li><span class="tips-icon">📖</span> 每天练习10分钟，效果更好</li>
+                    <li><span class="tips-icon">🎯</span> 重点关注掌握度较低的手势</li>
+                    <li><span class="tips-icon">🔄</span> 定期复习已掌握的手势保持熟练度</li>
+                </ul>
+            </div>
+
+
+
+
+            <div class="stats-grid">
+                <div class="stat-card"><div class="stat-icon primary">📊</div><div class="stat-info"><h3>总识别</h3><div class="number" id="totalRecognitions">0</div></div></div>
+                <div class="stat-card"><div class="stat-icon success">✅</div><div class="stat-info"><h3>已掌握</h3><div class="number" id="masteredCount">0</div></div></div>
+                <div class="stat-card"><div class="stat-icon warning">📚</div><div class="stat-info"><h3>学习中</h3><div class="number" id="learningCount">0</div></div></div>
+            </div>
+            <div class="card"><h3>最高频手势：<span id="topGesture">-</span></h3></div>
+
+        </main>
+    </div>
+
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/learning-stats.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script>
+        async function checkLogin() {
+            try {
+                const isLoggedIn = await auth.checkAuth();
+                if (!isLoggedIn) {
+                    window.location.href = 'login.html';
+                    return;
+                }
+                const user = auth.getUser();
+                if (user) {
+                    document.getElementById('username').textContent = user.name;
+                    document.getElementById('avatar').textContent = user.avatar;
+                    document.getElementById('userEmail').textContent = user.email || user.name;
+                }
+            } catch(err) {
+                console.error('检查登录失败:', err);
+                window.location.href = 'login.html';
+            }
+        }
+
+        const logoutBtn = document.querySelector('.logout-btn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', async (e) => {
+                e.preventDefault();
+                await auth.logout();
+            });
+        }
+
+        checkLogin();
+    </script>
+</body>
+</html>

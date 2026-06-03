@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手语交互系统 - 主控制台</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dashboard-page">
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">🤟</div>
+                <h2>手语交互系统</h2>
+                <p>AI智能版 v1.0</p>
+            </div>
+
+            <div class="user-info">
+                <div class="avatar">用</div>
+                <div class="user-details">
+                    <div class="user-name">演示用户</div>
+                    <div class="user-email">demo@example.com</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a href="dashboard.html">
+                            <span class="icon">🏠</span>
+                            <span>控制台</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="history.html">
+                            <span class="icon">📊</span>
+                            <span>识别历史</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="icon">📚</span>
+                            <span>手势库</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="icon">📈</span>
+                            <span>学习统计</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html">
+                            <span class="icon">👤</span>
+                            <span>个人中心</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="about.html">
+                            <span class="icon">ℹ️</span>
+                            <span>关于我们</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="login.html" class="logout-btn">
+                    <span class="icon">🚪</span>
+                    <span>退出登录</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部导航 -->
+            <div class="top-nav">
+                <div class="page-title">
+                    <h1>控制台</h1>
+                    <p>实时手语识别与交互</p>
+                </div>
+                <div class="top-nav-actions">
+                    <div class="status-indicator">
+                        <span class="status-dot online"></span>
+                        <span id="apiStatus">API已连接</span>
+                    </div>
+                    <div class="status-indicator">
+                        <span>🤖 LLM:</span>
+                        <span id="llmStatus">Mock模式</span>
+                    </div>
+                    <div class="notification-badge">
+                        <span>🔔</span>
+                        <span class="badge">3</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 统计卡片 -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon primary">🤟</div>
+                    <div class="stat-info">
+                        <h3>支持手势</h3>
+                        <div class="number" id="totalClasses">35</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon success">📊</div>
+                    <div class="stat-info">
+                        <h3>今日识别</h3>
+                        <div class="number" id="todayCount">127</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">💬</div>
+                    <div class="stat-info">
+                        <h3>对话次数</h3>
+                        <div class="number">89</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主功能区：两列布局 -->
+            <div class="dashboard-layout">
+                <!-- 左列：视频识别区 -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i>📹</i> 实时识别</h2>
+                            <div class="fps-counter" id="fps">FPS: 0</div>
+                        </div>
+
+                        <div class="video-container">
+                            <video id="videoElement" autoplay playsinline></video>
+                            <canvas id="overlayCanvas"></canvas>
+                        </div>
+
+                        <div class="control-group">
+                            <button id="startBtn" class="btn btn-primary">
+                                <span>📷</span> 开启摄像头
+                            </button>
+                            <button id="stopBtn" class="btn btn-secondary" disabled>
+                                <span>⏹️</span> 关闭
+                            </button>
+                            <button id="snapshotBtn" class="btn btn-secondary" disabled>
+                                <span>📸</span> 拍照
+                            </button>
+                        </div>
+
+                        <div class="detection-panel">
+                            <div class="current-sign">
+                                <div class="label">当前手势</div>
+                                <div class="sign" id="currentSign">-</div>
+                                <div class="confidence" id="currentConfidence"></div>
+                            </div>
+
+                            <h3 style="margin-bottom: 15px;">实时检测 <span class="badge success" id="detectionBadge">0</span></h3>
+                            <div class="detection-list" id="detections">
+                                <div style="text-align: center; color: #999; padding: 20px;">
+                                    等待摄像头开启...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右列：对话区 -->
+                <div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i>💬</i> AI助手</h2>
+                            <button id="understandBtn" class="btn btn-small" disabled>理解手势</button>
+                        </div>
+
+                        <div class="chat-container">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="message system">
+                                    <div class="content">👋 你好！我是手语助手，请开始手势交流</div>
+                                </div>
+                            </div>
+
+                            <div class="chat-input-area">
+                                <input type="text" id="chatInput" placeholder="输入文字或做手势..." disabled>
+                                <button id="sendBtn" class="btn btn-small btn-primary" disabled>发送</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 快捷手势面板 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i>📋</i> 常用手势</h2>
+                        </div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <span class="badge success" style="padding: 8px 15px;">谢谢</span>
+                            <span class="badge success" style="padding: 8px 15px;">你好</span>
+                            <span class="badge success" style="padding: 8px 15px;">朋友</span>
+                            <span class="badge success" style="padding: 8px 15px;">爱</span>
+                            <span class="badge success" style="padding: 8px 15px;">早上</span>
+                            <span class="badge success" style="padding: 8px 15px;">生日</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 手势类别区 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i>📚</i> 所有手势类别</h2>
+                    <span class="badge success" id="totalClassesBadge">35个</span>
+                </div>
+                <div class="classes-grid" id="classesList" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    加载中...
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

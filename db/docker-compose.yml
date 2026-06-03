@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: sign_language_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123456
+      MYSQL_DATABASE: sign_language
+      MYSQL_USER: sign_user
+      MYSQL_PASSWORD: sign_password
+      TZ: Asia/Shanghai
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./init:/docker-entrypoint-initdb.d
+      - mysql_data:/var/lib/mysql
+      - ./scripts:/scripts
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-time-zone=+8:00
+    networks:
+      - sign_network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: sign_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      - "8081:80"
+    depends_on:
+      - mysql
+    networks:
+      - sign_network
+
+volumes:
+  mysql_data:
+
+networks:
+  sign_network:
+    driver: bridge

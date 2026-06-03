@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手语交互系统 - 智能版</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/index.css">
+</head>
+<body class="index-page">
+    <div class="page-shell">
+        <!-- 顶部仿「游故宫」横幅 -->
+        <header class="top-hero">
+            <div class="hero-bg"></div>
+            <div class="hero-content">
+                <div class="hero-title-area">
+                    <h1 class="hero-title">手语云宫</h1>
+                    <p class="hero-subtitle">在温暖的色彩里 · 说出看不见的语言</p>
+                </div>
+                <div class="hero-status">
+                    <span class="status-chip" id="apiStatus">检查连接中...</span>
+                    <span class="status-chip" id="llmStatus">LLM: 模拟模式</span>
+                    <span class="status-chip light" id="classesCount">加载类别中...</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 顶部功能宫格（四个入口） -->
+        <section class="shortcut-section">
+            <div class="shortcut-grid">
+                <button class="shortcut-item">
+                    <span class="shortcut-icon">📹</span>
+                    <span class="shortcut-label">开启识别</span>
+                    <span class="shortcut-desc">启动摄像头实时检测</span>
+                </button>
+                <button class="shortcut-item">
+                    <span class="shortcut-icon">📚</span>
+                    <span class="shortcut-label">手势总览</span>
+                    <span class="shortcut-desc">查看支持的手语类别</span>
+                </button>
+                <button class="shortcut-item">
+                    <span class="shortcut-icon">🤖</span>
+                    <span class="shortcut-label">智能对话</span>
+                    <span class="shortcut-desc">与 AI 自然交流</span>
+                </button>
+                <button class="shortcut-item">
+                    <span class="shortcut-icon">⚙️</span>
+                    <span class="shortcut-label">系统设置</span>
+                    <span class="shortcut-desc">调整模型与偏好</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- 中部主卡片：左「游宫」视频区，右「看文物」会话区 -->
+        <main class="main-pane">
+            <!-- 左：视频导览 -->
+            <section class="pane-left">
+                <div class="card video-card">
+                    <div class="card-header">
+                        <div>
+                            <h2>实时手语导览</h2>
+                            <p>仿佛走进一座可以听见的「手语宫殿」</p>
+                        </div>
+                    </div>
+
+                    <div class="video-shell">
+                        <div class="video-container">
+                            <video id="videoElement" autoplay playsinline></video>
+                            <canvas id="overlayCanvas"></canvas>
+                        </div>
+                        <div class="video-controls">
+                            <button id="startBtn" class="btn btn-primary">📷 开启摄像头</button>
+                            <button id="stopBtn" class="btn btn-danger" disabled>⏹️ 关闭</button>
+                            <button id="snapshotBtn" class="btn btn-secondary" disabled>📸 拍照识别</button>
+                        </div>
+                    </div>
+
+                    <div class="video-meta">
+                        <div class="meta-item">
+                            <span class="meta-label">当前帧率</span>
+                            <span class="meta-value"><span id="fps">0</span> FPS</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="meta-label">本帧手势</span>
+                            <span class="meta-value"><span id="detectionCount">0</span> 个</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card detection-card">
+                    <div class="card-header compact">
+                        <h3>实时检测</h3>
+                        <span class="badge" id="detectionBadge">0</span>
+                    </div>
+                    <div id="detections" class="detections-container">
+                        <div class="placeholder">等待检测...</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 右：每日一图 + 会话区 -->
+            <section class="pane-right">
+                <div class="card current-sign-card">
+                    <div class="painting-strip">
+                        <div class="painting-meta">
+                            <span class="month-tag">今日手语</span>
+                            <span class="painting-title">当前手势</span>
+                            <span class="painting-sub">向上滑动般 · 让动作被「读懂」</span>
+                        </div>
+                        <div class="sign-display-block">
+                            <span id="currentSign" class="sign-text">-</span>
+                            <span id="currentConfidence" class="sign-confidence"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card chat-card">
+                    <div class="card-header compact">
+                        <h3>手语对话</h3>
+                        <span class="card-subtitle">从手势到语句 · AI 为你转译</span>
+                    </div>
+                    <div class="chat-container">
+                        <div class="chat-messages" id="chatMessages">
+                            <div class="message system">
+                                <div class="content">👋 欢迎来到「手语云宫」，开启摄像头或输入文字开始交流。</div>
+                            </div>
+                        </div>
+                        <div class="chat-input-area">
+                            <input type="text" id="chatInput" placeholder="也可以输入一句话，让 AI 为你作答..." disabled>
+                            <button id="sendBtn" class="btn btn-small" disabled>发送</button>
+                            <button id="understandBtn" class="btn btn-small btn-primary" disabled>理解手势</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 底部仿移动端 Tab 栏：类别 / 历史 / 设置 -->
+        <section class="bottom-tabs">
+            <div class="tabs-nav">
+                <button class="tab-btn active" data-tab="classes">
+                    <span class="tab-icon">📚</span>
+                    <span class="tab-label">手势库</span>
+                </button>
+                <button class="tab-btn" data-tab="history">
+                    <span class="tab-icon">📜</span>
+                    <span class="tab-label">对话录</span>
+                </button>
+                <button class="tab-btn" data-tab="settings">
+                    <span class="tab-icon">⚙️</span>
+                    <span class="tab-label">设置</span>
+                </button>
+            </div>
+
+            <div class="tabs-content">
+                <div class="tab-content active" id="classesTab">
+                    <div class="classes-grid" id="classesList">
+                        加载中...
+                    </div>
+                </div>
+
+                <div class="tab-content" id="historyTab">
+                    <div class="history-container" id="historyList">
+                        <div class="placeholder">暂无历史记录</div>
+                    </div>
+                    <button id="clearHistoryBtn" class="btn btn-small btn-danger">清空历史</button>
+                </div>
+
+                <div class="tab-content" id="settingsTab">
+                    <div class="settings-panel">
+                        <h4>LLM 设置</h4>
+                        <div class="setting-item">
+                            <label>模型类型：</label>
+                            <select id="llmModelSelect">
+                                <option value="mock">模拟模式（测试用）</option>
+                                <option value="openai">OpenAI GPT</option>
+                                <option value="deepseek">DeepSeek</option>
+                            </select>
+                        </div>
+                        <div class="setting-item">
+                            <label>API Key：</label>
+                            <input type="password" id="apiKeyInput" placeholder="输入API Key">
+                        </div>
+                        <button id="saveSettingsBtn" class="btn btn-small">保存设置</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>

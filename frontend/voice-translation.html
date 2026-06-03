@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手语交互系统 - 语音翻译</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body class="dashboard-page voice-translation-page">
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">🤟</div>
+                <h2>手语交互系统</h2>
+                <p>AI智能版 v1.0</p>
+            </div>
+
+            <div class="user-info">
+                <div class="avatar" id="avatar">用</div>
+                <div class="user-details">
+                    <div class="user-name" id="username">加载中...</div>
+                    <div class="user-email" id="userEmail">加载中...</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <span class="icon">🏠</span>
+                            <span>手语实时翻译</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="voice-translation.html">
+                            <span class="icon">🎤</span>
+                            <span>手语演示生成</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="upload-recognition.html">
+                            <span class="icon">⬆️</span>
+                            <span>图片视频识别</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-assistant.html">
+                            <span class="icon">🤖</span>
+                            <span>AI 助手</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="history.html">
+                            <span class="icon">📊</span>
+                            <span>识别历史</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="learning-stats.html">
+                            <span class="icon">📈</span>
+                            <span>学习统计</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="gesture-library.html">
+                            <span class="icon">📚</span>
+                            <span>手势库</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html">
+                            <span class="icon">👤</span>
+                            <span>个人中心</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="about.html">
+                            <span class="icon">ℹ️</span>
+                            <span>关于我们</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="login.html" class="logout-btn">
+                    <span class="icon">🚪</span>
+                    <span>退出登录</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部导航 -->
+            <div class="top-nav">
+                <div class="page-title">
+                    <h1>语音翻译</h1>
+                    <p>文字/语音转手语演示</p>
+                </div>
+                <div class="top-nav-actions">
+                    <div class="status-indicator">
+                        <span class="status-dot online"></span>
+                        <span>系统在线</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <!-- 输入区域 -->
+                <div class="card">
+                    <div class="card-header">
+                        <h2><i>✍️</i> 输入文字或语音</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="input-group">
+                            <div class="input-wrapper">
+                                <input type="text" id="textInput" class="text-input" placeholder="请输入要翻译的文字，例如：你好，很高兴认识你" />
+                                <button type="button" id="generateSignBtn" class="btn btn-primary input-btn">
+                                    <span>🎬</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="button-group">
+                            <button id="voiceInputBtn" class="btn">
+                                <span>🎤</span> 语音输入
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 翻译结果 -->
+                <div class="card" id="translationResultCard" style="display: none;">
+                    <div class="card-header">
+                        <h2><i>📝</i> 翻译结果</h2>
+                    </div>
+                    <div class="card-body">
+                        <div id="translationResult"></div>
+                    </div>
+                </div>
+
+                <!-- 视频手语播放器 -->
+                <div class="card" id="signPlayerCard" style="display: none;">
+                    <div class="card-header">
+                        <h2><i>🎬</i> 手语动画演示</h2>
+                        <div class="header-buttons">
+                            <button id="playSignBtn" class="btn btn-small btn-primary">▶️ 播放</button>
+                            <button id="pauseSignBtn" class="btn btn-small" style="display: none;">⏸️ 暂停</button>
+                            <button id="stopSignBtn" class="btn btn-small">⏹️ 停止</button>
+                            <button id="speakTranslationBtn" class="btn btn-small">🔊 朗读</button>
+                        </div>
+                    </div>
+
+                    <!-- 图片播放器 -->
+                    <img id="signVideo" style="width: 100%; height: 450px; background: #000; border-radius: 12px; object-fit: contain;" />
+                    
+                    <!-- 信息覆盖层 -->
+                    <div style="margin-top: -60px; padding: 15px 20px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); border-radius: 0 0 12px 12px; color: white;">
+                        <div id="currentGestureName" style="font-size: 24px; font-weight: bold; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">准备就绪</div>
+                        <div style="margin-top: 12px; width: 100%; height: 6px; background: rgba(255,255,255,0.3); border-radius: 4px; overflow: hidden;">
+                            <div id="progressBar" style="height: 100%; background: white; width: 0%; transition: width 0.3s;"></div>
+                        </div>
+                        <div id="gestureSequence" style="margin-top: 10px; font-size: 13px; opacity: 0.95;"></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- 引入脚本 -->
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/sign-video-player.js"></script>
+    <script src="js/voice-translation.js"></script>
+</body>
+</html>

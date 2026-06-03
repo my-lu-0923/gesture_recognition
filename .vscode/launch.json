@@ -1,0 +1,20 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "SignApplication",
+            "request": "launch",
+            "mainClass": "com.sign.SignApplication",
+            "projectName": "sign-language-system"
+        },
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug",
+            "terminal": "integrated",
+            "program": "${workspaceFolder}/${fileBasenameNoExtension}",
+            "args": [],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}

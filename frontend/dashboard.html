@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手语交互系统 - 实时翻译</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <!-- Three.js for 3D hand model -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="js/hand-pose-3d-v2.js"></script>
+</head>
+
+<body class="dashboard-page">
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">🤟</div>
+                <h2>手语交互系统</h2>
+                <p>AI智能版 v1.0</p>
+            </div>
+
+            <div class="user-info">
+                <div class="avatar" id="avatar">用</div>
+                <div class="user-details">
+                    <div class="user-name" id="username">加载中...</div>
+                    <div class="user-email" id="userEmail">加载中...</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active">
+                        <a href="dashboard.html">
+                            <span class="icon">🏠</span>
+                            <span>手语实时翻译</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="voice-translation.html">
+                            <span class="icon">🎤</span>
+                            <span>手语演示生成</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="upload-recognition.html">
+                            <span class="icon">⬆️</span>
+                            <span>图片视频识别</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="ai-assistant.html">
+                            <span class="icon">🤖</span>
+                            <span>AI 助手</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="history.html">
+                            <span class="icon">📊</span>
+                            <span>识别历史</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="learning-stats.html">
+                            <span class="icon">📈</span>
+                            <span>学习统计</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="gesture-library.html">
+                            <span class="icon">📚</span>
+                            <span>手势库</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html">
+                            <span class="icon">👤</span>
+                            <span>个人中心</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="about.html">
+                            <span class="icon">ℹ️</span>
+                            <span>关于我们</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="login.html" class="logout-btn">
+                    <span class="icon">🚪</span>
+                    <span>退出登录</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部导航 -->
+            <div class="top-nav">
+                <div class="page-title">
+                    <h1>实时翻译</h1>
+                    <p>实时手语识别与交互</p>
+                </div>
+                <div class="top-nav-actions">
+                    <div class="status-indicator">
+                        <span class="status-dot online"></span>
+                        <span id="apiStatus">API已连接</span>
+                    </div>
+                    <div class="status-indicator">
+                        <span>🤖 引擎:</span>
+                        <span id="engineStatus">混合模式</span>
+                    </div>
+                    <div class="notification-badge">
+                        <span>🔔</span>
+                        <span class="badge">3</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 统计卡片 -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon primary">🤟</div>
+                    <div class="stat-info">
+                        <h3>支持手势</h3>
+                        <div class="number" id="totalClasses">35</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon success">📊</div>
+                    <div class="stat-info">
+                        <h3>今日识别</h3>
+                        <div class="number" id="todayCount">127</div>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon warning">💬</div>
+                    <div class="stat-info">
+                        <h3>识别模式</h3>
+                        <div class="number" id="currentMode">混合</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主功能区：两列布局 -->
+            <div class="dashboard-layout">
+                <!-- 左列：视频识别区 -->
+                <div class="left-column">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i>📹</i> 实时识别</h2>
+                            <div class="fps-counter" id="fps">FPS: 0</div>
+                        </div>
+
+                        <div class="video-container">
+                            <video id="videoElement" autoplay playsinline></video>
+                            <canvas id="overlayCanvas"></canvas>
+                        </div>
+
+                        <div class="control-group">
+                            <button id="startBtn" class="btn btn-primary">
+                                <span>📷</span> 开启摄像头
+                            </button>
+                            <button id="stopBtn" class="btn btn-secondary" disabled>
+                                <span>⏹️</span> 关闭
+                            </button>
+                            <button id="snapshotBtn" class="btn btn-secondary" disabled>
+                                <span>📸</span> 拍照
+                            </button>
+                        </div>
+
+                        <!-- 识别模式选择 -->
+                        <div class="mode-selector">
+                            <button class="mode-btn active" data-mode="hybrid" id="modeHybrid">
+                                <span>🧠</span> 混合模式
+                            </button>
+                            <button class="mode-btn" data-mode="yolo" id="modeYolo">
+                                <span>⚡</span> YOLO快速
+                            </button>
+                            <button class="mode-btn" data-mode="lstm" id="modeLstm">
+                                <span>🎯</span> LSTM精准
+                            </button>
+                        </div>
+
+                        <div class="detection-panel">
+                            <div class="current-sign">
+                                <div class="label">当前手势</div>
+                                <div class="sign" id="currentSign">-</div>
+                                <div class="confidence" id="currentConfidence"></div>
+                            </div>
+
+                            <h3 style="margin-bottom: 15px;">实时检测 <span class="badge success" id="detectionBadge">0</span></h3>
+                            <div class="detection-list" id="detections">
+                                <div style="text-align: center; color: #999; padding: 20px;">
+                                    等待摄像头开启...
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右列：翻译结果区 -->
+                <div class="right-column">
+                    <!-- 当前手势大卡片 -->
+                    <div class="card result-card">
+                        <div class="card-header">
+                            <h2><i>✋</i> 当前识别</h2>
+                            <div class="header-buttons">
+                                <button id="speakBtn" class="btn btn-small" disabled>🔊 朗读</button>
+                            </div>
+                        </div>
+                        
+                        <div class="result-display">
+                            <div class="result-gesture" id="resultGesture">-</div>
+                            <div class="result-confidence" id="resultConfidence">置信度: 0%</div>
+                            <div class="result-time" id="resultTime">--:--:--</div>
+                        </div>
+                    </div>
+
+                    <!-- 句子构建区 -->
+                    <div class="card sentence-card">
+                        <div class="card-header">
+                            <h2><i>📝</i> 句子构建</h2>
+                            <div class="header-buttons">
+                                <button id="translateBtn" class="btn btn-small btn-success">🌐 翻译</button>
+                                <button id="clearBtn" class="btn btn-small">�️ 清空</button>
+                            </div>
+                        </div>
+
+                        <div class="sentence-display" id="sentenceDisplay">
+                            <div class="placeholder">等待识别手势...</div>
+                        </div>
+
+                        <div class="gesture-sequence" id="gestureSequence">
+                            <!-- 手势标签将显示在这里 -->
+                        </div>
+                    </div>
+
+                    <!-- 识别历史 -->
+                    <div class="card history-card">
+                        <div class="card-header">
+                            <h2><i>📜</i> 识别历史</h2>
+                            <span class="badge" id="historyCount">0</span>
+                        </div>
+                        <div class="history-list" id="historyList">
+                            <div class="history-empty">暂无识别记录</div>
+                        </div>
+                    </div>
+
+                    <!-- 统计信息 -->
+                    <div class="card stats-card">
+                        <div class="card-header">
+                            <h2><i>�</i> 实时统计</h2>
+                        </div>
+                        <div class="stats-grid-mini">
+                            <div class="stat-item">
+                                <div class="stat-label">帧率</div>
+                                <div class="stat-value" id="statFps">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">识别次数</div>
+                                <div class="stat-value" id="statCount">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">平均置信度</div>
+                                <div class="stat-value" id="statAvgConf">0%</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">连续识别</div>
+                                <div class="stat-value" id="statStreak">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 手势类别区 -->
+            <div class="card">
+                <div class="card-header">
+                    <h2><i>📚</i> 所有手势类别</h2>
+                    <span class="badge success" id="totalClassesBadge">35个</span>
+                </div>
+                <div class="classes-grid" id="classesList" style="display: flex; flex-wrap: wrap; gap: 8px;">
+                    加载中...
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        /* 新增样式 - 保持原有配色 */
+        .control-group {
+            display: flex;
+            gap: 12px;
+            margin: 15px 0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .control-group .btn {
+            min-width: 140px;
+            padding: 10px 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .mode-selector {
+            display: flex;
+            gap: 12px;
+            margin: 15px 0;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mode-btn {
+            padding: 8px 16px;
+            border: 2px solid var(--border-color);
+            background: white;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .mode-btn:hover {
+            border-color: var(--primary-color);
+        }
+
+        .mode-btn.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* 右列样式 */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .right-column .card {
+            margin-bottom: 0;
+        }
+
+        /* 结果卡片 */
+        .result-card .result-display {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #f7e5c8 0%, #f4ecdf 100%);
+            border-radius: 12px;
+            margin-top: 15px;
+        }
+
+        .result-display .result-gesture {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--dark-color);
+            margin-bottom: 10px;
+        }
+
+        .result-display .result-confidence {
+            font-size: 16px;
+            color: var(--gray-color);
+            margin-bottom: 5px;
+        }
+
+        .result-display .result-time {
+            font-size: 12px;
+            color: var(--gray-color);
+            opacity: 0.7;
+        }
+
+        /* 句子卡片 */
+        .sentence-card .sentence-display {
+            min-height: 80px;
+            padding: 20px;
+            background: #f9f5ed;
+            border-radius: 12px;
+            border: 2px dashed var(--border-color);
+            margin: 15px 0;
+            font-size: 18px;
+            line-height: 1.6;
+            color: var(--dark-color);
+        }
+
+        .sentence-display .placeholder {
+            color: var(--gray-color);
+            text-align: center;
+        }
+
+        .gesture-sequence {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .gesture-tag {
+            background: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .gesture-tag .confidence {
+            font-size: 11px;
+            opacity: 0.8;
+        }
+
+        /* 历史卡片 */
+        .history-card .history-list {
+            max-height: 200px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .history-empty {
+            text-align: center;
+            color: var(--gray-color);
+            padding: 20px;
+            font-size: 14px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .history-item .gesture-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .history-item .gesture-time {
+            font-size: 12px;
+            color: var(--gray-color);
+        }
+
+        .history-item .gesture-conf {
+            font-size: 12px;
+            color: var(--success-color);
+            font-weight: 500;
+        }
+
+        /* 统计卡片 */
+        .stats-grid-mini {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f9f5ed;
+            border-radius: 10px;
+        }
+
+        .stat-item .stat-label {
+            font-size: 12px;
+            color: var(--gray-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-item .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+    </style>
+</body>
+
+<script src="js/api.js?v=10"></script>
+<script src="js/auth.js?v=2"></script>
+<script src="js/smart-sentence-builder.js?v=1"></script>
+<script src="js/dashboard.js?v=10"></script>
+<script>
+    // 检查登录状态并更新用户信息
+    async function checkLogin() {
+        console.log('>>> checkLogin() 开始执行');
+        try {
+            // 先检查本地缓存
+            if (auth.isAuthenticated && auth.currentUser) {
+                console.log('✅ 本地缓存已登录，直接使用');
+                // 显示用户名
+                const user = auth.getUser();
+                console.log('获取到的用户:', user);
+                if (user) {
+                    const usernameEl = document.getElementById('username');
+                    const avatarEl = document.getElementById('avatar');
+                    const userEmailEl = document.getElementById('userEmail');
+                    
+                    if (usernameEl) usernameEl.textContent = user.name;
+                    if (avatarEl) avatarEl.textContent = user.avatar;
+                    if (userEmailEl) userEmailEl.textContent = user.email || user.name;
+                    console.log('✅ 用户信息已更新:', user);
+                }
+                console.log('>>> checkLogin() 完成');
+                return;
+            }
+            
+            // 本地没有缓存，再去后端检查
+            console.log('⚠️ 本地无缓存，检查后端认证状态...');
+            const isLoggedIn = await auth.checkAuth();
+            console.log('后端认证状态:', isLoggedIn);
+
+            if (!isLoggedIn) {
+                console.log('❌ 未登录，跳转到登录页');
+                window.location.replace('login.html');
+                return;
+            }
+
+            console.log('✅ 已登录，更新用户信息...');
+            const user = auth.getUser();
+            if (user) {
+                const usernameEl = document.getElementById('username');
+                const avatarEl = document.getElementById('avatar');
+                const userEmailEl = document.getElementById('userEmail');
+                
+                if (usernameEl) usernameEl.textContent = user.name;
+                if (avatarEl) avatarEl.textContent = user.avatar;
+                if (userEmailEl) userEmailEl.textContent = user.email || user.name;
+                console.log('✅ 用户信息已更新:', user);
+            }
+            console.log('>>> checkLogin() 完成');
+        } catch(err) {
+            console.error('❌ 检查登录失败:', err);
+            console.error('错误堆栈:', err.stack);
+            // 检查失败时，如果有本地缓存，不跳转
+            if (!auth.isAuthenticated) {
+                window.location.replace('login.html');
+            }
+        }
+    }
+
+    // 退出登录
+    const logoutBtn = document.querySelector('.logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            console.log('退出登录');
+            await auth.logout();
+        });
+    }
+
+    // 页面加载时检查 - 等待DOM完全加载
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', checkLogin);
+    } else {
+        checkLogin();
+    }
+</script>
+
+</html>

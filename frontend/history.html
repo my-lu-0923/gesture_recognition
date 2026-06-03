@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>识别历史 - 手语交互系统</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/history.css">
+</head>
+<body class="history-page">
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">🤟</div>
+            <h2>手语交互系统</h2>
+            <p>AI智能版 v1.0</p>
+        </div>
+        <div class="user-info"><div class="avatar" id="avatar">用</div><div class="user-details"><div class="user-name" id="username">加载中...</div><div class="user-email" id="userEmail">加载中...</div></div></div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="dashboard.html">
+                        <span class="icon">🏠</span>
+                        <span>手语实时翻译</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="voice-translation.html">
+                        <span class="icon">🎤</span>
+                        <span>手语演示生成</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="upload-recognition.html">
+                        <span class="icon">⬆️</span>
+                        <span>图片视频识别</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="ai-assistant.html">
+                        <span class="icon">🤖</span>
+                        <span>AI 助手</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="history.html">
+                        <span class="icon">📊</span>
+                        <span>识别历史</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="learning-stats.html">
+                        <span class="icon">📈</span>
+                        <span>学习统计</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="gesture-library.html">
+                        <span class="icon">📚</span>
+                        <span>手势库</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html">
+                        <span class="icon">👤</span>
+                        <span>个人中心</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="about.html">
+                        <span class="icon">ℹ️</span>
+                        <span>关于我们</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" id="logoutBtn" class="logout-btn">
+                <span class="icon">🚪</span>
+                <span>退出登录</span>
+            </a>
+        </div>
+    </aside>
+    <main class="main-content">
+        <div class="top-nav">
+            <div class="page-title"><h1>识别历史</h1><p>实时读取后端记录</p></div>
+            <div class="top-nav-actions">
+                <button class="btn btn-small" id="exportBtn">📥 导出数据</button>
+                <button class="btn btn-small btn-danger" id="clearBtn">🗑️ 清空</button>
+            </div>
+        </div>
+        <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon primary">📊</div><div class="stat-info"><h3>总识别次数</h3><div class="number" id="totalCount">0</div></div></div>
+            <div class="stat-card"><div class="stat-icon success">📅</div><div class="stat-info"><h3>今日识别</h3><div class="number" id="todayCount">0</div></div></div>
+            <div class="stat-card"><div class="stat-icon warning">🏆</div><div class="stat-info"><h3>高频手势</h3><div class="number" id="topGesture">-</div></div></div>
+        </div>
+        <div class="table-container">
+            <table>
+                <thead><tr><th>时间</th><th>手势</th><th>置信度</th><th>回复</th><th>操作</th></tr></thead>
+                <tbody id="historyTableBody"></tbody>
+            </table>
+        </div>
+    </main>
+</div>
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/history.js"></script>
+<script>
+    // 检查登录状态并更新用户信息
+    async function checkLogin() {
+        try {
+            const isLoggedIn = await auth.checkAuth();
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            const user = auth.getUser();
+            if (user) {
+                document.getElementById('username').textContent = user.name;
+                document.getElementById('avatar').textContent = user.avatar;
+                document.getElementById('userEmail').textContent = user.email || user.name;
+            }
+        } catch(err) {
+            console.error('检查登录失败:', err);
+            window.location.href = 'login.html';
+        }
+    }
+
+    // 退出登录
+    const logoutBtn = document.querySelector('.logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await auth.logout();
+        });
+    }
+
+    checkLogin();
+</script>
+</body>
+</html>

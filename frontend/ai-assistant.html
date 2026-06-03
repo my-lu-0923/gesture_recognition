@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手语交互系统 - AI助手</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+
+<body class="dashboard-page">
+    <div class="app-container">
+        <!-- 侧边栏 -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">🤟</div>
+                <h2>手语交互系统</h2>
+                <p>AI智能版 v1.0</p>
+            </div>
+
+            <div class="user-info">
+                <div class="avatar" id="avatar">用</div>
+                <div class="user-details">
+                    <div class="user-name" id="username">加载中...</div>
+                    <div class="user-email" id="userEmail">加载中...</div>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li>
+                        <a href="dashboard.html">
+                            <span class="icon">🏠</span>
+                            <span>手语实时翻译</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="voice-translation.html">
+                            <span class="icon">🎤</span>
+                            <span>手语演示生成</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="upload-recognition.html">
+                            <span class="icon">⬆️</span>
+                            <span>图片视频识别</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="ai-assistant.html">
+                            <span class="icon">🤖</span>
+                            <span>AI 助手</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="history.html">
+                            <span class="icon">📊</span>
+                            <span>识别历史</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="learning-stats.html">
+                            <span class="icon">📈</span>
+                            <span>学习统计</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="gesture-library.html">
+                            <span class="icon">📚</span>
+                            <span>手势库</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="profile.html">
+                            <span class="icon">👤</span>
+                            <span>个人中心</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="about.html">
+                            <span class="icon">ℹ️</span>
+                            <span>关于我们</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <a href="login.html" class="logout-btn">
+                    <span class="icon">🚪</span>
+                    <span>退出登录</span>
+                </a>
+            </div>
+        </aside>
+
+        <!-- 主内容区 -->
+        <main class="main-content">
+            <!-- 顶部导航 -->
+            <div class="top-nav">
+                <div class="page-title">
+                    <h1>AI助手</h1>
+                    <p>智能手语问答与辅助</p>
+                </div>
+                <div class="top-nav-actions">
+                    <div class="status-indicator">
+                        <span class="status-dot online"></span>
+                        <span id="aiStatus">AI在线</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 主功能区：两列布局 -->
+            <div class="dashboard-layout">
+                <!-- 左列：AI聊天区 -->
+                <div class="left-column">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i>🤖</i> 智能对话</h2>
+                            <div class="status-badge">
+                                <span class="dot online"></span>
+                                <span>在线</span>
+                            </div>
+                        </div>
+
+                        <div class="chat-container" id="chatContainer">
+                            <div class="chat-messages" id="chatMessages">
+                                <div class="message system">
+                                    <div class="message-bubble">
+                                        👋 欢迎使用AI手语助手！我可以帮您了解手语知识、学习手势、翻译句子等。
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chat-input-area">
+                            <div class="input-container">
+                                <textarea 
+                                    class="chat-input" 
+                                    id="chatInput" 
+                                    placeholder="输入您的问题..."
+                                    rows="1"
+                                ></textarea>
+                                <button class="send-btn" id="sendBtn">
+                                    <span>📤</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 右列：快捷功能区 -->
+                <div class="right-column">
+                    <!-- 快捷问题 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i>💡</i> 常见问题</h2>
+                        </div>
+                        <div class="quick-questions">
+                            <div class="quick-question" onclick="askQuestion('手语的发展历史是怎样的？')">
+                                <span class="icon">📜</span>
+                                <span>手语发展史</span>
+                            </div>
+                            <div class="quick-question" onclick="askQuestion('如何学习手语？')">
+                                <span class="icon">📚</span>
+                                <span>学习方法</span>
+                            </div>
+                            <div class="quick-question" onclick="askQuestion('手语有哪些特点？')">
+                                <span class="icon">✋</span>
+                                <span>手语特点</span>
+                            </div>
+                            <div class="quick-question" onclick="askQuestion('中国手语和国际手语有什么区别？')">
+                                <span class="icon">🌍</span>
+                                <span>国际差异</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 常用手势 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i>🤟</i> 常用手势</h2>
+                        </div>
+                        <div class="gesture-dict">
+                            <div class="gesture-item" onclick='askQuestion("你好怎么打？")'>
+                                <div class="icon">👋</div>
+                                <div class="name">你好</div>
+                            </div>
+                            <div class="gesture-item" onclick='askQuestion("谢谢怎么打？")'>
+                                <div class="icon">🙏</div>
+                                <div class="name">谢谢</div>
+                            </div>
+                            <div class="gesture-item" onclick='askQuestion("我爱你怎么打？")'>
+                                <div class="icon">🤟</div>
+                                <div class="name">我爱你</div>
+                            </div>
+                            <div class="gesture-item" onclick='askQuestion("再见怎么打？")'>
+                                <div class="icon">👋</div>
+                                <div class="name">再见</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 系统状态 -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h2><i>📊</i> 系统状态</h2>
+                        </div>
+                        <div class="status-list">
+                            <div class="status-item">
+                                <span class="label">AI助手</span>
+                                <span class="value online" id="aiServiceStatus">在线</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="label">识别引擎</span>
+                                <span class="value" id="engineStatus">YOLO+LSTM</span>
+                            </div>
+                            <div class="status-item">
+                                <span class="label">响应时间</span>
+                                <span class="value" id="responseTime">&lt; 1s</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <style>
+        /* AI助手页面专用样式 - 现代化设计 */
+        
+        /* 主布局优化 */
+        .dashboard-layout {
+            display: grid;
+            grid-template-columns: 1fr 380px;
+            gap: 24px;
+            height: calc(100vh - 140px);
+        }
+
+        .left-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 右侧布局优化 */
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .right-column .card {
+            max-height: calc((100vh - 140px - 40px) / 3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .right-column .card-header {
+            flex-shrink: 0;
+        }
+
+        .right-column .quick-questions,
+        .right-column .gesture-dict,
+        .right-column .status-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .right-column .quick-questions::-webkit-scrollbar,
+        .right-column .gesture-dict::-webkit-scrollbar,
+        .right-column .status-list::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .right-column .quick-questions::-webkit-scrollbar-thumb,
+        .right-column .gesture-dict::-webkit-scrollbar-thumb,
+        .right-column .status-list::-webkit-scrollbar-thumb {
+            background: #d4c4b4;
+            border-radius: 3px;
+        }
+
+        /* 聊天容器 */
+        .chat-container {
+            flex: 1;
+            background: linear-gradient(180deg, #faf8f5 0%, #ffffff 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: #ddd;
+            border-radius: 3px;
+        }
+
+        /* 消息样式 */
+        .message {
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .message.assistant {
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .message.system {
+            display: flex;
+            justify-content: center;
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 14px 20px;
+            border-radius: 20px;
+            font-size: 15px;
+            line-height: 1.7;
+            word-wrap: break-word;
+        }
+
+        .message.user .message-bubble {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #d4a04a 100%);
+            color: white;
+            border-bottom-right-radius: 6px;
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.25);
+        }
+
+        .message.assistant .message-bubble {
+            background: white;
+            color: var(--dark-color);
+            border-bottom-left-radius: 6px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+
+        .message.system .message-bubble {
+            background: linear-gradient(135deg, #f5f0e8 0%, #ebe4d8 100%);
+            color: #8a7d6b;
+            font-size: 14px;
+            padding: 10px 20px;
+            border-radius: 20px;
+        }
+
+        /* 输入区域 */
+        .chat-input-area {
+            padding: 16px 24px;
+            background: white;
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .input-container {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: #f9f7f4;
+            border-radius: 28px;
+            padding: 8px 12px 8px 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            width: 100%;
+        }
+
+        .input-container:focus-within {
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 4px 16px rgba(184, 134, 11, 0.15);
+        }
+
+        .chat-input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 6px 0;
+            font-size: 15px;
+            resize: none;
+            outline: none;
+            font-family: inherit;
+            min-height: 48px;
+            max-height: 120px;
+            line-height: 1.5;
+        }
+
+        .chat-input::placeholder {
+            color: #b8b0a4;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #d4a04a 100%);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(184, 134, 11, 0.3);
+        }
+
+        .send-btn:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(184, 134, 11, 0.4);
+        }
+
+        .send-btn:active {
+            transform: scale(0.95);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 卡片样式优化 */
+        .card {
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            border: 1px solid rgba(0,0,0,0.06);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-header {
+            padding: 18px 24px;
+            background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
+            border-bottom: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .card-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-header h2 i {
+            font-size: 20px;
+        }
+
+        /* 快捷问题 */
+        .quick-questions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            padding: 16px;
+            padding-bottom: 20px;
+        }
+
+        .quick-question {
+            background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 14px;
+            padding: 14px 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            font-size: 14px;
+            color: var(--dark-color);
+        }
+
+        .quick-question:hover {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #d4a04a 100%);
+            color: white;
+            transform: translateX(6px);
+            box-shadow: 0 4px 16px rgba(184, 134, 11, 0.25);
+            border-color: transparent;
+        }
+
+        .quick-question .icon {
+            font-size: 20px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+
+        .quick-question:hover .icon {
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* 手势词典 */
+        .gesture-dict {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .gesture-item {
+            background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
+            border: 1px solid rgba(0,0,0,0.06);
+            border-radius: 16px;
+            padding: 20px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .gesture-item:hover {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #d4a04a 100%);
+            color: white;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(184, 134, 11, 0.3);
+            border-color: transparent;
+        }
+
+        .gesture-item .icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+            transition: transform 0.3s;
+        }
+
+        .gesture-item:hover .icon {
+            transform: scale(1.2);
+        }
+
+        .gesture-item .name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* 系统状态 */
+        .status-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            padding: 16px;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 18px;
+            background: linear-gradient(135deg, #faf8f5 0%, #f5f0e8 100%);
+            border-radius: 12px;
+            border: 1px solid rgba(0,0,0,0.06);
+        }
+
+        .status-item .label {
+            color: #8a7d6b;
+            font-size: 14px;
+        }
+
+        .status-item .value {
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 14px;
+        }
+
+        .status-item .value.online {
+            color: #22c55e;
+        }
+
+        /* 思考中动画 */
+        .thinking {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .thinking-dots {
+            display: flex;
+            gap: 5px;
+        }
+
+        .thinking-dots span {
+            width: 8px;
+            height: 8px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+
+        .thinking-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .thinking-dots span:nth-child(2) { animation-delay: -0.16s; }
+
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+
+        /* 状态徽章 */
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #22c55e;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        .status-badge .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #22c55e;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 1200px) {
+            .dashboard-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .right-column {
+                flex-direction: row;
+                flex-wrap: wrap;
+            }
+            
+            .right-column .card {
+                flex: 1;
+                min-width: 280px;
+            }
+        }
+    </style>
+</body>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script>
+    // 检查登录状态
+    async function checkLogin() {
+        try {
+            const isLoggedIn = await auth.checkAuth();
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = auth.getUser();
+            if (user) {
+                document.getElementById('username').textContent = user.name;
+                document.getElementById('avatar').textContent = user.avatar;
+                document.getElementById('userEmail').textContent = user.email || user.name;
+            }
+        } catch(err) {
+            window.location.href = 'login.html';
+        }
+    }
+
+    // DOM元素
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // 添加消息
+    function addMessage(role, content) {
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `message ${role}`;
+        messageDiv.innerHTML = `<div class="message-bubble">${content}</div>`;
+        chatMessages.appendChild(messageDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    // 发送消息
+    async function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+
+        // 添加用户消息
+        addMessage('user', message);
+        chatInput.value = '';
+
+        // 显示思考中
+        const thinkingDiv = document.createElement('div');
+        thinkingDiv.className = 'message assistant';
+        thinkingDiv.id = 'thinking';
+        thinkingDiv.innerHTML = `
+            <div class="message-bubble">
+                <div class="thinking">
+                    <span>思考中</span>
+                    <div class="thinking-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        `;
+        chatMessages.appendChild(thinkingDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+
+        // 调用API
+        try {
+            const result = await SignAPI.chat(message);
+
+            // 移除思考中
+            const thinking = document.getElementById('thinking');
+            if (thinking) thinking.remove();
+
+            // 添加AI回复
+            if (result.success && result.response) {
+                addMessage('assistant', result.response);
+            } else {
+                addMessage('assistant', '抱歉，我暂时无法回答这个问题。请稍后再试。');
+            }
+        } catch (error) {
+            // 移除思考中
+            const thinking = document.getElementById('thinking');
+            if (thinking) thinking.remove();
+
+            // 使用备用回复
+            const fallbackResponse = getFallbackResponse(message);
+            addMessage('assistant', fallbackResponse);
+        }
+    }
+
+    // 快捷问题
+    function askQuestion(question) {
+        chatInput.value = question;
+        sendMessage();
+    }
+
+    // 备用回复
+    function getFallbackResponse(message) {
+        const messageLower = message.toLowerCase();
+
+        if (message.includes('历史') || message.includes('发展')) {
+            return `📜 **手语发展历史**
+
+**古代时期**
+- 手语自古就存在于聋哑人社区中
+- 古希腊、古罗马文献中就有关于手语的记载
+
+**近代发展**
+- 1760年：法国建立了第一所聋哑学校
+- 1817年：美国建立了第一所聋哑学校，ASL开始形成
+
+**现代**
+- 1960年代：证明手语是完整的自然语言
+- 现在：全球有超过300种不同的手语`;
+        }
+
+        if (message.includes('学习') || message.includes('怎么学')) {
+            return `📚 **学习手语的建议**
+
+1️⃣ **基础入门**
+- 从基本字母和数字的手势开始
+- 学习常用词汇（如：你好、谢谢等）
+
+2️⃣ **练习方法**
+- 每天坚持练习15-30分钟
+- 对着镜子练习，观察手势是否标准
+
+3️⃣ **进阶提升**
+- 多看手语视频教程
+- 参加手语社团或课程
+- 与聋哑朋友交流实践`;
+        }
+
+        if (message.includes('特点') || message.includes('区别')) {
+            return `✋ **手语的主要特点**
+
+**语法结构**
+- 采用「话题-评论」结构
+- 时间词通常放在句首或句末
+
+**表达方式**
+- 手势是主要表达方式
+- 面部表情非常重要
+- 身体姿态和空间位置也传递信息
+
+**地域差异**
+- 中国手语南北存在差异
+- 各国手语互不相通`;
+        }
+
+        return `我收到了您的问题：「${message}」
+
+我是手语AI助手，可以帮您：
+- 了解手语的发展历史
+- 学习手语的方法
+- 手语的语法特点
+- 各国手语的区别
+
+请尝试点击左侧的快捷问题，或直接输入您想了解的内容！`;
+    }
+
+    // 事件监听
+    sendBtn.addEventListener('click', sendMessage);
+
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendMessage();
+        }
+    });
+
+    // 自动调整输入框高度
+    chatInput.addEventListener('input', function() {
+        this.style.height = 'auto';
+        this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+    });
+
+    // 退出登录
+    const logoutBtn = document.querySelector('.logout-btn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await auth.logout();
+        });
+    }
+
+    // 页面加载时检查登录
+    checkLogin();
+</script>
+
+</html>

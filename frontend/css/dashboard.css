@@ -1,0 +1,140 @@
+.dashboard-page .main-content {
+    padding: 20px 22px 24px;
+}
+
+.dashboard-page .top-nav {
+    margin-bottom: 18px;
+}
+
+.dashboard-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.dashboard-layout .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* 确保手势类别卡片有足够间距 */
+.main-content > .card:last-child {
+    margin-top: 0;
+}
+
+.video-container {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.video-container video,
+.video-container canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.fps-counter {
+    font-size: 12px;
+    color: var(--gray-color);
+}
+
+.current-sign {
+    text-align: center;
+    padding: 14px 10px;
+    border-radius: 14px;
+    background: #f7e5c8;
+    margin-bottom: 10px;
+}
+
+.current-sign .label {
+    font-size: 12px;
+}
+
+.current-sign .sign {
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 6px;
+}
+
+.current-sign .confidence {
+    font-size: 13px;
+    margin-top: 2px;
+}
+
+.detection-panel h3 {
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.detection-list {
+    max-height: 220px;
+    overflow-y: auto;
+}
+
+.detection-list .badge {
+    margin-left: 6px;
+}
+
+.classes-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.class-tag {
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: #f4ecdf;
+    font-size: 12px;
+}
+
+/* AI助手区域优化 - 使高度与识别模块对齐 */
+.dashboard-page .chat-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    min-height: 0;
+}
+
+.dashboard-page .chat-messages {
+    max-height: 500px !important;  /* 限制最大高度 */
+    overflow-y: auto !important;   /* 启用垂直滚动条 */
+    overflow-x: hidden;
+    padding-right: 8px;
+    flex: 1;
+    min-height: 200px;
+}
+
+.dashboard-page .chat-input-area {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-color);
+    flex-shrink: 0;
+}
+
+@media (max-width: 900px) {
+    .dashboard-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 语音翻译页面特定样式 */
+.voice-translation-page .dashboard-layout .card {
+    height: auto;
+}
+
+.voice-translation-page .dashboard-layout {
+    grid-template-columns: 1fr;
+}

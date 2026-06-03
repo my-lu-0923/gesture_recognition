@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>上传识别 - 手语交互系统</title>
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/upload-recognition.css">
+</head>
+<body>
+<div class="app-container">
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">🤟</div>
+            <h2>手语交互系统</h2>
+            <p>AI智能版 v1.0</p>
+        </div>
+        <div class="user-info">
+            <div class="avatar" id="avatar">用</div>
+            <div class="user-details">
+                <div class="user-name" id="username">加载中...</div>
+                <div class="user-email" id="userEmail">加载中...</div>
+            </div>
+        </div>
+        <nav class="sidebar-nav">
+            <ul>
+                <li>
+                    <a href="dashboard.html">
+                        <span class="icon">🏠</span>
+                        <span>手语实时翻译</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="voice-translation.html">
+                        <span class="icon">🎤</span>
+                        <span>手语演示生成</span>
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="upload-recognition.html">
+                        <span class="icon">⬆️</span>
+                        <span>图片视频识别</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="ai-assistant.html">
+                        <span class="icon">🤖</span>
+                        <span>AI 助手</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="history.html">
+                        <span class="icon">📊</span>
+                        <span>识别历史</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="learning-stats.html">
+                        <span class="icon">📈</span>
+                        <span>学习统计</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="gesture-library.html">
+                        <span class="icon">📚</span>
+                        <span>手势库</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="profile.html">
+                        <span class="icon">👤</span>
+                        <span>个人中心</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="about.html">
+                        <span class="icon">ℹ️</span>
+                        <span>关于我们</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <div class="sidebar-footer">
+            <a href="#" id="logoutBtn" class="logout-btn">
+                <span class="icon">🚪</span>
+                <span>退出登录</span>
+            </a>
+        </div>
+    </aside>
+    <main class="main-content">
+        <div class="top-nav">
+            <div class="page-title">
+                <h1>上传识别</h1>
+                <p>支持图片和视频抽帧识别，结果写入历史</p>
+            </div>
+        </div>
+
+        <!-- 统计卡片 -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon primary">🤟</div>
+                <div class="stat-info">
+                    <h3>今日识别</h3>
+                    <div class="stat-mini-number" id="todayCount">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon success">📊</div>
+                <div class="stat-info">
+                    <h3>累计识别</h3>
+                    <div class="stat-mini-number" id="totalCount">0</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon warning">💬</div>
+                <div class="stat-info">
+                    <h3>平均置信度</h3>
+                    <div class="stat-mini-number" id="accuracy">--</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 选项卡 -->
+        <div class="card">
+            <div class="tab-buttons">
+                <button class="tab-btn active" data-tab="image">🖼️ 图片识别</button>
+                <button class="tab-btn" data-tab="video">🎬 视频识别</button>
+                <button class="tab-btn" data-tab="history">📜 识别历史</button>
+            </div>
+
+            <!-- 图片识别选项卡 -->
+            <div class="tab-content active" id="tab-image">
+                <div style="text-align: center; padding: 20px;">
+                    <div class="upload-icon" style="margin: 0 auto 20px;">🖼️</div>
+                    <h3 style="margin-bottom: 10px;">上传手语图片</h3>
+                    <p style="color: var(--gray-color); margin-bottom: 20px;">支持 JPG、PNG、BMP 格式，文件大小不超过 10MB</p>
+
+                    <div style="position: relative; display: inline-block;">
+                        <button class="btn btn-primary" id="selectImageBtn">📁 选择图片</button>
+                        <input type="file" id="imageInput" accept="image/*" style="position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;">
+                    </div>
+
+                    <div id="imagePreview" style="margin-top: 20px;"></div>
+
+                    <button class="btn btn-primary" id="imageBtn" style="margin-top: 20px; display: none;">🔍 开始识别</button>
+                </div>
+            </div>
+
+            <!-- 视频识别选项卡 -->
+            <div class="tab-content" id="tab-video">
+                <div style="text-align: center; padding: 20px;">
+                    <div class="upload-icon" style="margin: 0 auto 20px;">🎬</div>
+                    <h3 style="margin-bottom: 10px;">上传手语视频</h3>
+                    <p style="color: var(--gray-color); margin-bottom: 20px;">支持 MP4、AVI、MOV 格式，将抽取首帧进行识别</p>
+
+                    <div style="position: relative; display: inline-block;">
+                        <button class="btn btn-primary" id="selectVideoBtn">📁 选择视频</button>
+                        <input type="file" id="videoInput" accept="video/*" style="position: absolute; left: 0; top: 0; opacity: 0; width: 100%; height: 100%; cursor: pointer;">
+                    </div>
+
+                    <div id="videoPreview" style="margin-top: 20px;"></div>
+
+                    <button class="btn btn-primary" id="videoBtn" style="margin-top: 20px; display: none;">🎬 开始识别</button>
+                </div>
+            </div>
+
+            <!-- 识别历史选项卡 -->
+            <div class="tab-content" id="tab-history">
+                <div id="historyList" style="max-height: 400px; overflow-y: auto;">
+                    <div style="text-align: center; padding: 40px; color: var(--gray-color);">
+                        ⏳ 暂无识别记录
+                    </div>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <button class="btn btn-secondary" id="clearHistoryBtn">🗑️ 清空历史</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 识别结果卡片 -->
+        <div class="result-card" id="resultCard" style="display: none;">
+            <div class="result-title">🎯 识别结果</div>
+            <div class="result-gesture-large" id="resultGesture">--</div>
+            <div class="confidence-bar">
+                <div class="confidence-fill" id="confidenceFill" style="width: 0%"></div>
+            </div>
+            <div class="result-confidence" id="resultConfidence">置信度: --</div>
+            <div class="result-translation" id="resultTranslation">--</div>
+            <div class="result-saved" id="resultSaved"></div>
+            <button class="btn btn-secondary" id="closeResultBtn" style="margin-top: 15px;">关闭</button>
+        </div>
+    </main>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/upload-recognition.js"></script>
+<script>
+    // 检查登录状态
+    async function checkLogin() {
+        try {
+            const isLoggedIn = await auth.checkAuth();
+            if (!isLoggedIn) {
+                window.location.href = 'login.html';
+                return;
+            }
+            const user = auth.getUser();
+            if (user) {
+                document.getElementById('username').textContent = user.name;
+                document.getElementById('avatar').textContent = user.avatar;
+                document.getElementById('userEmail').textContent = user.email || user.name;
+            }
+        } catch(err) {
+            console.error('检查登录失败:', err);
+            window.location.href = 'login.html';
+        }
+    }
+
+    // 退出登录
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await auth.logout();
+        });
+    }
+
+    checkLogin();
+</script>
+</body>
+</html>
