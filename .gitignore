@@ -1,0 +1,44 @@
+# Environment & secrets
+.env
+*.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Java / Spring Boot
+backend/target/
+*.class
+*.jar
+*.war
+*.log
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+*.egg
+
+# Models (large binary files)
+python_service/models/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Data
+*.zip
+*.tar.gz
+*.7z
